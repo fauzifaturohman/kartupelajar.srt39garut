@@ -150,6 +150,23 @@
     border-radius:20px;
   }
 
+  /* ============ GARIS POTONG (CUT LINE) ============ */
+  .card-holder{
+    position:relative;
+    display:inline-block;
+    line-height:0;
+    font-size:0;
+  }
+  /* garis putus-putus 2mm di luar tepi kartu */
+  .card-holder::before{
+    content:"";
+    position:absolute;
+    inset:-2mm;
+    border:.3mm dashed rgba(100,116,139,.6);
+    border-radius:5.5mm;      /* 3.5mm (radius kartu) + 2mm offset */
+    pointer-events:none;
+  }
+
   /* ============ KARTU UKURAN KTP (85.6mm x 54mm) ============ */
   .card{
     position:relative;
@@ -517,6 +534,12 @@
       break-inside:avoid;
       page-break-inside:avoid;
     }
+
+    /* --- garis potong versi cetak --- */
+    .card-holder::before{
+      border:.3mm dashed #64748b;
+      border-radius:5.5mm;
+    }
   }
 </style>
 </head>
@@ -581,7 +604,7 @@
     <p class="hint">
       <strong>Tips cetak:</strong> gunakan kertas <strong>A4</strong>, margin <strong>12 mm</strong>,
       skala <strong>100%</strong>, dan aktifkan opsi <em>Background graphics / Cetak warna latar</em>
-      agar warna kartu ikut tercetak.
+      agar warna kartu ikut tercetak. Gunting mengikuti <strong>garis putus-putus</strong> di sekeliling kartu.
     </p>
   </aside>
 
@@ -593,56 +616,58 @@
       <div class="card-wrap">
         <div class="card-label no-print">Sisi Depan</div>
 
-        <div class="card front">
-          <!-- Panel kiri: foto & QR -->
-          <div class="left-panel">
-            <div class="photo-frame">
-              <div class="photo" id="photoBox">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                </svg>
+        <div class="card-holder">
+          <div class="card front">
+            <!-- Panel kiri: foto & QR -->
+            <div class="left-panel">
+              <div class="photo-frame">
+                <div class="photo" id="photoBox">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="qr-box">
+                <div class="qr" id="qrFront"></div>
               </div>
             </div>
-            <div class="qr-box">
-              <div class="qr" id="qrFront"></div>
-            </div>
-          </div>
 
-          <!-- Panel kanan: data siswa -->
-          <div class="right-panel">
-            <div class="header">
-              <div class="kementerian">Kementerian Sosial Republik Indonesia</div>
-              <div class="school">Sekolah Rakyat Terintegrasi 39 Garut</div>
-              <div class="divider"></div>
-            </div>
+            <!-- Panel kanan: data siswa -->
+            <div class="right-panel">
+              <div class="header">
+                <div class="kementerian">Kementerian Sosial Republik Indonesia</div>
+                <div class="school">Sekolah Rakyat Terintegrasi 39 Garut</div>
+                <div class="divider"></div>
+              </div>
 
-            <div class="student-name" id="outNama">—</div>
+              <div class="student-name" id="outNama">—</div>
 
-            <div class="info-grid">
-              <div class="info-item">
-                <div class="lbl">NISN</div>
-                <div class="val" id="outNisn">—</div>
-              </div>
-              <div class="info-item">
-                <div class="lbl">Kelas</div>
-                <div class="val" id="outKelas">—</div>
-              </div>
-              <div class="info-item wide">
-                <div class="lbl">Tempat, Tanggal Lahir</div>
-                <div class="val" id="outTtl">—</div>
-              </div>
-              <div class="info-item wide">
-                <div class="lbl">Alamat</div>
-                <div class="val" id="outAlamat">—</div>
-              </div>
-              <div class="info-item">
-                <div class="lbl">Tahun Ajaran</div>
-                <div class="val" id="outTahun">—</div>
-              </div>
-              <div class="info-item">
-                <div class="lbl">Status</div>
-                <div class="val" style="color:#10b981;">Siswa Aktif</div>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="lbl">NISN</div>
+                  <div class="val" id="outNisn">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="lbl">Kelas</div>
+                  <div class="val" id="outKelas">—</div>
+                </div>
+                <div class="info-item wide">
+                  <div class="lbl">Tempat, Tanggal Lahir</div>
+                  <div class="val" id="outTtl">—</div>
+                </div>
+                <div class="info-item wide">
+                  <div class="lbl">Alamat</div>
+                  <div class="val" id="outAlamat">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="lbl">Tahun Ajaran</div>
+                  <div class="val" id="outTahun">—</div>
+                </div>
+                <div class="info-item">
+                  <div class="lbl">Status</div>
+                  <div class="val" style="color:#10b981;">Siswa Aktif</div>
+                </div>
               </div>
             </div>
           </div>
@@ -653,38 +678,40 @@
       <div class="card-wrap">
         <div class="card-label no-print">Sisi Belakang</div>
 
-        <div class="card back">
-          <div class="back-header">
-            <div class="kementerian">Kementerian Sosial Republik Indonesia</div>
-            <div class="school">Sekolah Rakyat Terintegrasi 39 Garut</div>
-          </div>
+        <div class="card-holder">
+          <div class="card back">
+            <div class="back-header">
+              <div class="kementerian">Kementerian Sosial Republik Indonesia</div>
+              <div class="school">Sekolah Rakyat Terintegrasi 39 Garut</div>
+            </div>
 
-          <div class="back-body">
-            <div class="back-title">SYARAT &amp; KETENTUAN</div>
-            <div class="terms">
-              <div class="term">
-                <div class="term-num">1</div>
-                <div class="term-text">Kartu ini merupakan identitas resmi pemegang kartu selama menjadi siswa aktif dan tidak dapat dipindahtangankan kepada pihak lain.</div>
-              </div>
-              <div class="term">
-                <div class="term-num">2</div>
-                <div class="term-text">Pemegang kartu wajib membawa dan menunjukkan kartu ini saat menggunakan fasilitas sekolah atau mengikuti kegiatan resmi kependidikan.</div>
-              </div>
-              <div class="term">
-                <div class="term-num">3</div>
-                <div class="term-text">Apabila kartu ini hilang atau rusak, pemegang kartu segera melapor ke bagian tata usaha, dan bagi yang menemukan harap mengembalikan ke alamat sekolah yang tertera.</div>
+            <div class="back-body">
+              <div class="back-title">SYARAT &amp; KETENTUAN</div>
+              <div class="terms">
+                <div class="term">
+                  <div class="term-num">1</div>
+                  <div class="term-text">Kartu ini merupakan identitas resmi pemegang kartu selama menjadi siswa aktif dan tidak dapat dipindahtangankan kepada pihak lain.</div>
+                </div>
+                <div class="term">
+                  <div class="term-num">2</div>
+                  <div class="term-text">Pemegang kartu wajib membawa dan menunjukkan kartu ini saat menggunakan fasilitas sekolah atau mengikuti kegiatan resmi kependidikan.</div>
+                </div>
+                <div class="term">
+                  <div class="term-num">3</div>
+                  <div class="term-text">Apabila kartu ini hilang atau rusak, pemegang kartu segera melapor ke bagian tata usaha, dan bagi yang menemukan harap mengembalikan ke alamat sekolah yang tertera.</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="back-footer">
-            <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            <div class="addr">
-              Jl. Raya Samarang, Cintarakyat, Kec. Samarang,<br />
-              Kabupaten Garut, Jawa Barat 44161
+            <div class="back-footer">
+              <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <div class="addr">
+                Jl. Raya Samarang, Cintarakyat, Kec. Samarang,<br />
+                Kabupaten Garut, Jawa Barat 44161
+              </div>
             </div>
           </div>
         </div>
